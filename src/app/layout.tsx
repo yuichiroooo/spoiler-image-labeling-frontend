@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Spoiler Labeling",
-  description: "Sports Spoiler Image Labeling System",
+  description: "System of labeling of sports spoiler image",
 };
 
 export default function RootLayout({
