@@ -6,6 +6,7 @@ import useUserNameStore from "@/store/UserName";
 import useUserProgressStore from "@/store/UserProgress";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 type ImageMeta = {
     video_id: string;
@@ -15,10 +16,14 @@ type ImageMeta = {
 export default function Label() {
     const userName: string = useUserNameStore.getState().name;
     const progress: number = useUserProgressStore.getState().progress;
+
     const initialLabels: number[] = [0, 0, 0, 0, 0];
     const [labels, setLabels] = useState<number[]>([...initialLabels]);
+    
     const [metas, setMetas] = useState<ImageMeta[]>([]);
+    
     const router = useRouter();
+    const { toast } = useToast();
 
     const handleRadioChange = (index: number, value: string) => {
         const newLabels = [...labels];
@@ -42,7 +47,19 @@ export default function Label() {
     }
 
     const updateProgress = async () => {
-        await axios.put(`${process.env.NEXT_PUBLIC_API_PROXY}/users/update?name=${userName}`);
+        await axios.put(`${process.env.NEXT_PUBLIC_API_PROXY}/users/update?name=${userName}`).then(() => {
+            toast({
+                description: "送信に成功しました",
+                className: "bg-blue-500 text-white",
+                duration: 2000,
+            })
+        }).catch(() => {
+            toast({
+                description: "送信に失敗しました",
+                className: "bg-red-500 text-white",
+                duration: 2000,
+            })
+        });
     }
 
     const submitLabels = async () => {
